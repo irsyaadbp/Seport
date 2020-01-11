@@ -12,8 +12,6 @@
     <string name="min">-</string>
     <string name="badge_away_team">Badge Away Team</string>
     <string name="title_away_team">Title away team</string>
-    <string name="loading_home_team">Loading Home Team</string>
-    <string name="loading_away_team">Loading Away Team</string>
     <string name="home">Home</string>
     <string name="away">Away</string>
     <string name="date">Date</string>
