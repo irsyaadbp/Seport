@@ -1,6 +1,7 @@
-package com.irsyaad.dicodingsubmission.seport.model
+package com.irsyaad.dicodingsubmission.seport.model.service.local
 
 import com.irsyaad.dicodingsubmission.seport.R
+import com.irsyaad.dicodingsubmission.seport.model.SportModel
 
 object dataSport {
     private val dataLeagueId = intArrayOf(
@@ -98,15 +99,31 @@ object dataSport {
                 "At the end of each season the top two clubs, together with the winner of the play-offs between the clubs which finished in 3rd–6th position, are promoted to Football League Championship and are replaced by the three clubs that finished at the bottom of that division.\n" +
                 "\n" +
                 "Similarly, the four clubs that finished at the bottom of Football League One are relegated to Football League Two and are replaced by the top three clubs and the club that won the 4th–7th place play-offs in that division.\n" +
-                "Sky Sports currently show live League One matches with highlights shown on BBC One on their programme called The Football League Show, which also broadcasts highlights of Football League Championship and Football League Two matches. The show is available on the red button the following Sunday until midday and is available on iPlayer all the following week. Highlights of all games in the Football League are also available to view separately on the Sky Sports website. In Sweden, TV4 Sport has the rights of broadcasting from the league. A couple of league matches during the season of 09/10 including play-off matches and the play-off final to the Championship were shown. In Australia, Setanta Sports Australia broadcasts live Championship matches. In the USA and surrounding countries including Cuba, some Football League Championship, Football League One and Football League Two games are shown on beIN Sport."
+                "Sky Sports currently show live League One matches with highlights shown on BBC One on their programme called The Football League Show, which also broadcasts highlights of Football League Championship and Football League Two matches. The show is available on the red button the following Sunday until midday and is available on iPlayer all the following week. Highlights of all games in the Football League are also available to view separately on the Sky Sports website. In Sweden, TV4 SportModel has the rights of broadcasting from the league. A couple of league matches during the season of 09/10 including play-off matches and the play-off final to the Championship were shown. In Australia, Setanta Sports Australia broadcasts live Championship matches. In the USA and surrounding countries including Cuba, some Football League Championship, Football League One and Football League Two games are shown on beIN SportModel."
 
 
     )
-    val listDataSport: ArrayList<Sport> get() {
-        val list = arrayListOf<Sport>()
+
+    val dataDetailEvent = arrayOf(
+        "Score",
+        "Shots",
+        "Red Cards",
+        "Yellow Cards",
+        "Formation",
+        "Goal Detail",
+        "Lineup Defense",
+        "Lineup Forward",
+        "Lineup Goalkeeper",
+        "Lineup Midfield",
+        "Lineup Substitutes"
+    )
+
+
+    val listDataSport: ArrayList<SportModel> get() {
+        val list = arrayListOf<SportModel>()
 
         for (i in dataLeagueId.indices){
-            val league = Sport(
+            val league = SportModel(
                 id = dataLeagueId[i],
                 league = dataLeague[i],
                 badge = dataBadgeImage[i],

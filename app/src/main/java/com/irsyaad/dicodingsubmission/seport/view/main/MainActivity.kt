@@ -3,17 +3,20 @@ package com.irsyaad.dicodingsubmission.seport.view.main
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.irsyaad.dicodingsubmission.seport.R
 import com.irsyaad.dicodingsubmission.seport.adapter.SportAdapter
-import com.irsyaad.dicodingsubmission.seport.model.Sport
-import com.irsyaad.dicodingsubmission.seport.view.detail.DetailActivity
+import com.irsyaad.dicodingsubmission.seport.model.SportModel
+import com.irsyaad.dicodingsubmission.seport.view.detail.DetailLeagueActivity
 import com.irsyaad.dicodingsubmission.seport.viewModel.ListViewModel
+import com.irsyaad.dicodingsubmission.seport.viewModel.ViewModelFactory
 import org.jetbrains.anko.*
 
 class MainActivity : AppCompatActivity(), AnkoLogger {
 
     private lateinit var sportAdapter: SportAdapter
+
+    val keyParcelable = "SportModel"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +29,7 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
             //Log Anko
             info("mencoba log.i di anko, anda klik ${it.league}")
 
-            val item = Sport(
+            val item = SportModel(
                 it.id,
                 it.league,
                 it.badge,
@@ -34,8 +37,8 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
             )
 
             //Intent Anko
-            startActivity<DetailActivity>(
-                "Sport" to item
+            startActivity<DetailLeagueActivity>(
+                keyParcelable to item
             )
         }
 
@@ -43,9 +46,9 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
     }
 
     private fun callViewModel() {
-        val listViewModel = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(ListViewModel::class.java)
+        val listViewModel = ViewModelProviders.of(this, ViewModelFactory().viewModelFactory{ ListViewModel()})[ListViewModel::class.java]
 
-        listViewModel.getDataFilm().observe(this, Observer {
+        listViewModel.getListLeague().observe(this, Observer {
             if(it != null){
                 sportAdapter.setData(it)
             }

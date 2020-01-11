@@ -8,15 +8,15 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.irsyaad.dicodingsubmission.seport.model.Sport
+import com.irsyaad.dicodingsubmission.seport.model.SportModel
 import com.irsyaad.dicodingsubmission.seport.view.main.ListUI
 import org.jetbrains.anko.AnkoContext
 
-class SportAdapter(private val context: Context, private val listener: (Sport) -> Unit) : RecyclerView.Adapter<SportAdapter.ViewHolder>() {
+class SportAdapter(private val context: Context, private val listener: (SportModel) -> Unit) : RecyclerView.Adapter<SportAdapter.ViewHolder>() {
 
-    private var datas: ArrayList<Sport> = arrayListOf()
+    private var datas: ArrayList<SportModel> = arrayListOf()
 
-    fun setData(mData: ArrayList<Sport>){
+    fun setData(mData: ArrayList<SportModel>){
         datas = mData
         notifyDataSetChanged()
     }
@@ -39,7 +39,7 @@ class SportAdapter(private val context: Context, private val listener: (Sport) -
         private val image = itemView.findViewById<ImageView>(ListUI.ivBadge)
         private val container = itemView.findViewById<LinearLayout>(ListUI.vlContainer)
 
-        fun bind(data: Sport, listener: (Sport) -> Unit, context: Context){
+        fun bind(data: SportModel, listener: (SportModel) -> Unit, context: Context){
             title.text = data.league
             Glide.with(context)
                 .load(data.badge)

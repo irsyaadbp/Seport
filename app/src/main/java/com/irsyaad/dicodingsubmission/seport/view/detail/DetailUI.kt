@@ -4,16 +4,16 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.view.Gravity
 import com.irsyaad.dicodingsubmission.seport.R
-import com.irsyaad.dicodingsubmission.seport.model.Sport
+import com.irsyaad.dicodingsubmission.seport.model.SportModel
 import org.jetbrains.anko.*
 
-class DetailUI(private val data: Sport?): AnkoComponent<DetailActivity> {
+class DetailUI(private val data: SportModel?): AnkoComponent<DetailLeagueActivity> {
     companion object{
         const val ivBadge = 1
         const val tvTitle = 2
         const val tvDesc = 3
     }
-    override fun createView(ui: AnkoContext<DetailActivity>) = with(ui) {
+    override fun createView(ui: AnkoContext<DetailLeagueActivity>) = with(ui) {
         scrollView {
             relativeLayout {
                 imageView {

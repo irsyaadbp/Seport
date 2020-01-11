@@ -1,4 +1,21 @@
 <resources>
     <string name="app_name">Seport</string>
     <string name="exit_app">Are you sure to exit this apps?</string>
+    <string name="image_badge_league">image badge league</string>
+    <string name="text_title_league">Text title league</string>
+    <string name="www_senjacreative_com">www.senjacreative.com</string>
+    <string name="nextMatch">Next Match</string>
+    <string name="lastMatch">Last Match</string>
+    <string name="badge_home_team">Badge Home Team</string>
+    <string name="title_home_team">Title Home Team</string>
+    <string name="colon">:</string>
+    <string name="min">-</string>
+    <string name="badge_away_team">Badge Away Team</string>
+    <string name="title_away_team">Title away team</string>
+    <string name="loading_home_team">Loading Home Team</string>
+    <string name="loading_away_team">Loading Away Team</string>
+    <string name="home">Home</string>
+    <string name="away">Away</string>
+    <string name="date">Date</string>
+    <string name="search_not_found">Search Not Found :(</string>
 </resources>

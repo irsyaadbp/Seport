@@ -4,9 +4,8 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class Sport(
-    val id: Int,
-    val league: String?,
-    val badge: Int,
-    val description: String?
-):Parcelable
+data class DetailEventModel(
+    val home: String?,
+    val title: String?,
+    val away: String?
+): Parcelable
