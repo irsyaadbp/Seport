@@ -31,7 +31,7 @@ class DetailLeagueActivity : AppCompatActivity() {
 
         viewModel.getDetailLeague().observe(this, Observer { result ->
             if(result != null){
-                setLayout(result, data)
+                setLayout(result)
             }else{
                 viewModel.isError.value = true
             }
@@ -58,14 +58,14 @@ class DetailLeagueActivity : AppCompatActivity() {
         tabLayout.setupWithViewPager(viewPager)
     }
 
-    private fun setLayout(result: ListDetailLeague, data: SportModel){
+    private fun setLayout(result: ListDetailLeague){
         Glide.with(this)
             .load(result.strBadge)
             .centerCrop()
             .into(ivBadgeLeague)
 
         tvTitleLeague.text = result.strLeague
-        tvWebsite.text = result.strWebsite
+        tvDescription.text = data.description
     }
 
     fun getId(): Int {

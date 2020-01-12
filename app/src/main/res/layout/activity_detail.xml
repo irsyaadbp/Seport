@@ -26,12 +26,12 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginTop="?attr/actionBarSize"
-                android:layout_marginBottom="?attr/actionBarSize">
+                android:layout_marginBottom="?attr/actionBarSize"
+                android:layout_marginEnd="16dp">
                 <ImageView
                     android:id="@+id/ivBadgeLeague"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:layout_marginStart="16dp"
                     android:contentDescription="@string/image_badge_league"
                     android:src="@drawable/american_mayor_league"/>
                 <LinearLayout
@@ -47,15 +47,18 @@
                         android:textStyle="bold"
                         android:layout_marginStart="16dp"
                         android:textColor="@color/colorWhite"/>
+
                     <TextView
-                        android:id="@+id/tvWebsite"
+                        android:id="@+id/tvDescription"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/www_senjacreative_com"
+                        android:text="@string/description"
                         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                         android:layout_marginTop="8dp"
                         android:layout_marginStart="16dp"
-                        android:textColor="@color/colorGrey"/>
+                        android:textColor="@color/colorGrey"
+                        android:maxLines="4"
+                        android:ellipsize="end"/>
                 </LinearLayout>
             </LinearLayout>
 
