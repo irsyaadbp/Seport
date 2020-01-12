@@ -1,20 +1,32 @@
 package com.irsyaad.dicodingsubmission.seport.viewModel
 
-import android.util.Log
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.irsyaad.dicodingsubmission.seport.model.*
+import androidx.lifecycle.viewModelScope
+import com.irsyaad.dicodingsubmission.seport.model.DetailEventModel
+import com.irsyaad.dicodingsubmission.seport.model.EventModel
+import com.irsyaad.dicodingsubmission.seport.model.FavoriteModel
+import com.irsyaad.dicodingsubmission.seport.model.SportModel
 import com.irsyaad.dicodingsubmission.seport.model.response.*
-import com.irsyaad.dicodingsubmission.seport.model.service.local.dataSport
+import com.irsyaad.dicodingsubmission.seport.model.service.FavoriteRepository
+import com.irsyaad.dicodingsubmission.seport.model.service.local.DataSport
+import com.irsyaad.dicodingsubmission.seport.model.service.local.room.FavoriteDatabase
 import com.irsyaad.dicodingsubmission.seport.model.service.network.ApiRepository
+import io.reactivex.disposables.CompositeDisposable
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 
-class ListViewModel(private val id: Int = 0) : ViewModel() {
+class ListViewModel(application: Application) : AndroidViewModel(application) {
     private val service = ApiRepository.getData()
+    private val favoriteDao = FavoriteDatabase.getInstance(application)!!.favoriteDao()
+    private val repository: FavoriteRepository = FavoriteRepository(favoriteDao)
+    private var favoriteDatabase: FavoriteDatabase? = FavoriteDatabase.getInstance(application)
+    private var disposable: CompositeDisposable = CompositeDisposable()
 
     private val listLeague: MutableLiveData<ArrayList<SportModel>> = MutableLiveData()
     private val detailLeague: MutableLiveData<ListDetailLeague> = MutableLiveData()
@@ -25,15 +37,32 @@ class ListViewModel(private val id: Int = 0) : ViewModel() {
     private val detailAwayTeam: MutableLiveData<ListDetailTeam> = MutableLiveData()
     private val listSearchMatch: MutableLiveData<List<EventModel>> = MutableLiveData()
 
+    var isFavorite: MutableLiveData<Boolean> = MutableLiveData()
+
     var showLoading: MutableLiveData<Boolean> = MutableLiveData()
     var isError: MutableLiveData<Boolean> = MutableLiveData()
 
+    val getNextEventFavorite: LiveData<List<FavoriteModel>> = repository.nextEventFavorite
+    val getPastEventFavorite: LiveData<List<FavoriteModel>> = repository.pastEventFavorite
+
+    fun checkFavorite(id:Int, type: String)= viewModelScope.launch {
+        isFavorite.value = repository.checkFavorite(id, type) > 0
+    }
+
+    fun insertFavorite(favorite: FavoriteModel) = viewModelScope.launch {
+        repository.insert(favorite)
+    }
+
+    fun deleteFavorite(id: Int, type: String) = viewModelScope.launch {
+        repository.delete(id, type)
+    }
+
     fun getListLeague(): LiveData<ArrayList<SportModel>> {
-        if(listLeague.value == null) listLeague.postValue(dataSport.listDataSport)
+        if(listLeague.value == null) listLeague.postValue(DataSport.listDataSport)
         return listLeague
     }
 
-    fun getDetailLeague(): LiveData<ListDetailLeague>{
+    fun getDetailLeague(id: Int): LiveData<ListDetailLeague>{
         if(detailLeague.value == null) setDataDetailLeague(id)
         return detailLeague
     }
@@ -62,7 +91,7 @@ class ListViewModel(private val id: Int = 0) : ViewModel() {
         })
     }
 
-    fun getPastEvent(): LiveData<List<EventModel>>{
+    fun getPastEvent(id: Int): LiveData<List<EventModel>>{
         if(pastEvent.value == null) setDataPastEvent(id)
         return pastEvent
     }
@@ -107,7 +136,7 @@ class ListViewModel(private val id: Int = 0) : ViewModel() {
         })
     }
 
-    fun getNextEvent(): LiveData<List<EventModel>>{
+    fun getNextEvent(id: Int): LiveData<List<EventModel>>{
         if(nextEvent.value == null) setDataNextEvent(id)
         return nextEvent
     }
@@ -152,7 +181,7 @@ class ListViewModel(private val id: Int = 0) : ViewModel() {
         })
     }
 
-    fun getDetailEventLeague(): LiveData<ArrayList<DetailEventModel>>{
+    fun getDetailEventLeague(id: Int): LiveData<ArrayList<DetailEventModel>>{
         if(detailEventLeague.value == null) setDataDetailEventLeague(id)
         return detailEventLeague
     }
@@ -173,7 +202,7 @@ class ListViewModel(private val id: Int = 0) : ViewModel() {
                 showLoading.value = false
                 isError.value = false
 
-                val titles = dataSport.dataDetailEvent
+                val titles = DataSport.dataDetailEvent
                 val data = response.body()?.events?.get(0)
                 val detail = arrayListOf<DetailEventModel>()
                 

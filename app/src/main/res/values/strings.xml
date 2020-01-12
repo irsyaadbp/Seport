@@ -16,4 +16,8 @@
     <string name="away">Away</string>
     <string name="date">Date</string>
     <string name="search_not_found">Search Not Found :(</string>
+    <string name="favorite">Favorite</string>
+    <string name="remove_favorite">Remove from favorite</string>
+    <string name="not_found">Not Found</string>
+
 </resources>

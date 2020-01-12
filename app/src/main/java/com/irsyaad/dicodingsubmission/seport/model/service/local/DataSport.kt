@@ -3,7 +3,7 @@ package com.irsyaad.dicodingsubmission.seport.model.service.local
 import com.irsyaad.dicodingsubmission.seport.R
 import com.irsyaad.dicodingsubmission.seport.model.SportModel
 
-object dataSport {
+object DataSport {
     private val dataLeagueId = intArrayOf(
         4328,
         4334,

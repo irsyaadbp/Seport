@@ -3,21 +3,19 @@ package com.irsyaad.dicodingsubmission.seport.view.search
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.irsyaad.dicodingsubmission.seport.R
 import com.irsyaad.dicodingsubmission.seport.adapter.EventAdapter
 import com.irsyaad.dicodingsubmission.seport.view.detail.DetailEventActivity
 import com.irsyaad.dicodingsubmission.seport.viewModel.ListViewModel
-import com.irsyaad.dicodingsubmission.seport.viewModel.ViewModelFactory
 import kotlinx.android.synthetic.main.activity_search.*
 
 class SearchActivity : AppCompatActivity() {
@@ -32,20 +30,19 @@ class SearchActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         search()
-        viewModel = ViewModelProviders.of(this, ViewModelFactory().viewModelFactory{ ListViewModel() })[ListViewModel::class.java]
+        viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
         isLoading()
         viewModel.getSearchEvent().observe(this, Observer { result ->
-
-            if(result != null){
+            result?.let {
                 searchAdapter.setData(result)
-
                 if(result.isEmpty()) {
                     Toast.makeText(this, getString(R.string.search_not_found), Toast.LENGTH_SHORT).show()
                     tvNotFound.visibility = View.VISIBLE
                     rvSearch.visibility = View.GONE
                     loading.visibility = View.GONE
                 }
-            }
+            } ?: run { viewModel.isError.value = true}
+
         })
 
         searchAdapter = EventAdapter(this){

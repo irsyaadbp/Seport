@@ -7,13 +7,19 @@ import androidx.fragment.app.FragmentPagerAdapter
 import com.irsyaad.dicodingsubmission.seport.R
 import com.irsyaad.dicodingsubmission.seport.view.detail.fragment.NextEventFragment
 import com.irsyaad.dicodingsubmission.seport.view.detail.fragment.PastEventFragment
+import com.irsyaad.dicodingsubmission.seport.view.favorite.fragment.NextFavoriteFragment
+import com.irsyaad.dicodingsubmission.seport.view.favorite.fragment.PastFavoriteFragment
 
-class ViewPagerAdapter(private val context : Context, fragmentManager : FragmentManager) : FragmentPagerAdapter (fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+class ViewPagerAdapter(private val context : Context, fragmentManager : FragmentManager, from: String) : FragmentPagerAdapter (fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
-    private val pages = listOf(
+    private val pages = if(from == "DetailLeague") listOf(
         NextEventFragment(),
         PastEventFragment()
+    ) else listOf(
+        NextFavoriteFragment(),
+        PastFavoriteFragment()
     )
+
 
     override fun getItem(position: Int): Fragment {
         return pages[position]

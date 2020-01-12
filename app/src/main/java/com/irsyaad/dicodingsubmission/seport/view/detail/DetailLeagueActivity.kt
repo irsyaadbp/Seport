@@ -1,21 +1,18 @@
 package com.irsyaad.dicodingsubmission.seport.view.detail
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.irsyaad.dicodingsubmission.seport.R
 import com.irsyaad.dicodingsubmission.seport.adapter.ViewPagerAdapter
-import com.irsyaad.dicodingsubmission.seport.model.response.ListDetailLeague
 import com.irsyaad.dicodingsubmission.seport.model.SportModel
+import com.irsyaad.dicodingsubmission.seport.model.response.ListDetailLeague
 import com.irsyaad.dicodingsubmission.seport.view.main.MainActivity
 import com.irsyaad.dicodingsubmission.seport.viewModel.ListViewModel
-import com.irsyaad.dicodingsubmission.seport.viewModel.ViewModelFactory
 import kotlinx.android.synthetic.main.activity_detail.*
-
 
 class DetailLeagueActivity : AppCompatActivity() {
 
@@ -25,22 +22,16 @@ class DetailLeagueActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
-        data = intent.getParcelableExtra(MainActivity().keyParcelable)
+        data = intent.getParcelableExtra(MainActivity().keyParcelable)!!
 
-        viewModel = ViewModelProviders.of(this, ViewModelFactory().viewModelFactory{ ListViewModel(data.id)})[ListViewModel::class.java]
+        viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
 
-        viewModel.getDetailLeague().observe(this, Observer { result ->
-            if(result != null){
-                setLayout(result)
-            }else{
-                viewModel.isError.value = true
-            }
+        viewModel.getDetailLeague(data.id).observe(this, Observer { result ->
+            result?.let { setLayout(it) } ?: run { viewModel.isError.value = true }
         })
 
         setSupportActionBar(toolbar)
         setViewPager()
-
-//        DetailUI(data).setContentView(this)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -53,12 +44,12 @@ class DetailLeagueActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun setViewPager(){
-        viewPager.adapter = ViewPagerAdapter(this, supportFragmentManager)
+    private fun setViewPager() {
+        viewPager.adapter = ViewPagerAdapter(this, supportFragmentManager, "DetailLeague")
         tabLayout.setupWithViewPager(viewPager)
     }
 
-    private fun setLayout(result: ListDetailLeague){
+    private fun setLayout(result: ListDetailLeague) {
         Glide.with(this)
             .load(result.strBadge)
             .centerCrop()
@@ -71,5 +62,9 @@ class DetailLeagueActivity : AppCompatActivity() {
     fun getId(): Int {
         val id = data.id.toString()
         return id.toInt()
+    }
+
+    fun getParentActivity(): String {
+        return "DetailLeague"
     }
 }

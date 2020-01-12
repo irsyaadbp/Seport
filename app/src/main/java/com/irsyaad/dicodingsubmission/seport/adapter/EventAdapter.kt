@@ -1,6 +1,7 @@
 package com.irsyaad.dicodingsubmission.seport.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,8 +10,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.irsyaad.dicodingsubmission.seport.R
-import com.irsyaad.dicodingsubmission.seport.model.response.DetailTeamLeague
 import com.irsyaad.dicodingsubmission.seport.model.EventModel
+import com.irsyaad.dicodingsubmission.seport.model.response.DetailTeamLeague
 import com.irsyaad.dicodingsubmission.seport.model.service.network.ApiRepository
 import com.irsyaad.dicodingsubmission.seport.model.service.network.ApiService
 import kotlinx.android.synthetic.main.layout_team_item.view.*
@@ -24,6 +25,7 @@ class EventAdapter(private val context: Context, private val listener: (EventMod
     private val service = ApiRepository.getData()
 
     fun setData(mData: List<EventModel>){
+        Log.d("mData", "mData")
         datas = mData
         notifyDataSetChanged()
     }

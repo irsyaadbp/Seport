@@ -1,23 +1,21 @@
 package com.irsyaad.dicodingsubmission.seport.view.detail
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.irsyaad.dicodingsubmission.seport.R
 import com.irsyaad.dicodingsubmission.seport.adapter.DetailEventAdapter
 import com.irsyaad.dicodingsubmission.seport.model.EventModel
-import com.irsyaad.dicodingsubmission.seport.model.response.ListDetailTeam
-import com.irsyaad.dicodingsubmission.seport.view.detail.fragment.NextEventFragment
+import com.irsyaad.dicodingsubmission.seport.model.FavoriteModel
 import com.irsyaad.dicodingsubmission.seport.viewModel.ListViewModel
-import com.irsyaad.dicodingsubmission.seport.viewModel.ViewModelFactory
-import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.activity_detail.toolbar
 import kotlinx.android.synthetic.main.activity_detail_event.*
 
@@ -25,26 +23,32 @@ class DetailEventActivity : AppCompatActivity() {
 
     private lateinit var viewModel: ListViewModel
     private lateinit var data: EventModel
+    private lateinit var type: String
     private lateinit var detailEventAdapter: DetailEventAdapter
+    private var favorite: Boolean = false
+
+    private lateinit var menu: Menu
 
     val keyDetailEvent = "DETAIL_EVENT"
+    val keyTypeEvent = "TYPE_EVENT"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_event)
 
-        data = intent.getParcelableExtra(keyDetailEvent)
+        data = intent.getParcelableExtra(keyDetailEvent)!!
+        type = intent.getStringExtra(keyTypeEvent)!!
 
-        viewModel = ViewModelProviders.of(this, ViewModelFactory().viewModelFactory{ ListViewModel(data.id!!.toInt())})[ListViewModel::class.java]
+        viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
 
         isLoading()
         setLayout()
 
-        viewModel.getDetailEventLeague().observe(this, Observer { result ->
-            if(result != null){
-                detailEventAdapter.setData(result)
-            }else{
-                viewModel.isError.value = true
-            }
+        viewModel.getDetailEventLeague(data.id!!.toInt()).observe(this, Observer { result ->
+            result?.let {
+                detailEventAdapter.setData(it)
+                viewModel.checkFavorite(data.id!!.toInt(), type)
+            } ?: run { viewModel.isError.value = true}
         })
 
         setSupportActionBar(toolbar)
@@ -57,13 +61,48 @@ class DetailEventActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        return when (item.itemId) {
             android.R.id.home -> {
                 onBackPressed()
-                return true
+                true
             }
+            R.id.om_favorite -> {
+                viewModel.isFavorite.value = !viewModel.isFavorite.value!!
+                if (viewModel.isFavorite.value!!) {
+                    viewModel.insertFavorite(
+                        FavoriteModel(
+                            data.id!!.toInt(),
+                            data.idHomeTeam!!.toInt(),
+                            data.homeTeam!!,
+                            data.homeTeamScore,
+                            data.idAwayTeam!!.toInt(),
+                            data.awayTeam!!,
+                            data.awayTeamScore,
+                            data.name,
+                            data.date,
+                            data.time,
+                            data.thumbnails,
+                            type
+                        )
+                    )
+                    Toast.makeText(this, getString(R.string.favorite), Toast.LENGTH_SHORT).show()
+                } else {
+                    viewModel.deleteFavorite(data.id!!.toInt(), type)
+                    Toast.makeText(this, getString(R.string.remove_favorite), Toast.LENGTH_SHORT).show()
+                }
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
-        return super.onOptionsItemSelected(item)
+
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        this.menu = menu
+        val inflater = menuInflater
+        inflater.inflate(R.menu.favorite_menu, menu)
+        isFavorite()
+        return super.onCreateOptionsMenu(menu)
     }
 
     private fun setLayout(){
@@ -104,6 +143,17 @@ class DetailEventActivity : AppCompatActivity() {
             }else{
                 rvDetailEvent.visibility = View.VISIBLE
                 loading.visibility = View.GONE
+            }
+        })
+    }
+
+    private fun isFavorite(){
+        viewModel.isFavorite.observe(this, Observer {status ->
+            favorite = status
+            Log.d("status", ""+status)
+            when {
+                status -> menu.getItem(0).icon = getDrawable(R.drawable.ic_favorite_pink_24dp)
+                else -> menu.getItem(0).icon = getDrawable(R.drawable.ic_favorite_border_black_24dp)
             }
         })
     }

@@ -1,15 +1,14 @@
 package com.irsyaad.dicodingsubmission.seport.view.main
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.irsyaad.dicodingsubmission.seport.R
 import com.irsyaad.dicodingsubmission.seport.adapter.SportAdapter
 import com.irsyaad.dicodingsubmission.seport.model.SportModel
 import com.irsyaad.dicodingsubmission.seport.view.detail.DetailLeagueActivity
 import com.irsyaad.dicodingsubmission.seport.viewModel.ListViewModel
-import com.irsyaad.dicodingsubmission.seport.viewModel.ViewModelFactory
 import org.jetbrains.anko.*
 
 class MainActivity : AppCompatActivity(), AnkoLogger {
@@ -46,12 +45,10 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
     }
 
     private fun callViewModel() {
-        val listViewModel = ViewModelProviders.of(this, ViewModelFactory().viewModelFactory{ ListViewModel()})[ListViewModel::class.java]
+        val viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
 
-        listViewModel.getListLeague().observe(this, Observer {
-            if(it != null){
-                sportAdapter.setData(it)
-            }
+        viewModel.getListLeague().observe(this, Observer {result ->
+            result?.let { sportAdapter.setData(it) } ?: run { viewModel.isError.value = true}
         })
     }
 
