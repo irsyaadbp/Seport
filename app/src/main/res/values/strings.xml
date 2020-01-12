@@ -3,7 +3,7 @@
     <string name="exit_app">Are you sure to exit this apps?</string>
     <string name="image_badge_league">image badge league</string>
     <string name="text_title_league">Text title league</string>
-    <string name="description">description</string>
+    <string name="text_description">description</string>
     <string name="nextMatch">Next Match</string>
     <string name="lastMatch">Last Match</string>
     <string name="badge_home_team">Badge Home Team</string>
