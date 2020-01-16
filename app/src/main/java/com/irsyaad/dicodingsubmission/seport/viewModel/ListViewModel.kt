@@ -25,8 +25,6 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     private val service = ApiRepository.getData()
     private val favoriteDao = FavoriteDatabase.getInstance(application)!!.favoriteDao()
     private val repository: FavoriteRepository = FavoriteRepository(favoriteDao)
-    private var favoriteDatabase: FavoriteDatabase? = FavoriteDatabase.getInstance(application)
-    private var disposable: CompositeDisposable = CompositeDisposable()
 
     private val listLeague: MutableLiveData<ArrayList<SportModel>> = MutableLiveData()
     private val detailLeague: MutableLiveData<ListDetailLeague> = MutableLiveData()
@@ -67,7 +65,10 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
         return detailLeague
     }
 
-    private fun setDataDetailLeague(id: Int){
+    val detailLeagues: LiveData<ListDetailLeague>
+        get() = detailLeague
+
+    fun setDataDetailLeague(id: Int){
         showLoading.value = true
 
         service.detailLeague(id).enqueue(object : Callback<DetailLeagueModel>{

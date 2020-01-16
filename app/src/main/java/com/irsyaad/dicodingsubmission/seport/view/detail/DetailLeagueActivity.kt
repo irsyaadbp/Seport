@@ -64,7 +64,4 @@ class DetailLeagueActivity : AppCompatActivity() {
         return id.toInt()
     }
 
-    fun getParentActivity(): String {
-        return "DetailLeague"
-    }
 }
