@@ -32,6 +32,7 @@ class MainUI(private val sportAdapter: SportAdapter): AnkoComponent<MainActivity
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             tooltipText = "Favorite Action"
                         }
+                        id = R.id.btnFavoriteMain
 
                         setIcon(R.drawable.ic_favorite_black_24dp)
                         setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
@@ -45,6 +46,7 @@ class MainUI(private val sportAdapter: SportAdapter): AnkoComponent<MainActivity
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             tooltipText = "Search Action"
                         }
+                        id = R.id.btnSearchMain
 
                         setIcon(R.drawable.ic_search)
                         setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)

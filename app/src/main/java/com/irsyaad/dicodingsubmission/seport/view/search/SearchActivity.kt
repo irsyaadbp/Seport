@@ -15,12 +15,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.irsyaad.dicodingsubmission.seport.R
 import com.irsyaad.dicodingsubmission.seport.adapter.EventAdapter
 import com.irsyaad.dicodingsubmission.seport.view.detail.DetailEventActivity
-import com.irsyaad.dicodingsubmission.seport.viewModel.ListViewModel
 import kotlinx.android.synthetic.main.activity_search.*
 
 class SearchActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: ListViewModel
+    private lateinit var viewModel: SearchViewModel
     private lateinit var searchAdapter: EventAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +29,7 @@ class SearchActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         search()
-        viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(SearchViewModel::class.java)
         isLoading()
         viewModel.getSearchEvent().observe(this, Observer { result ->
             result?.let {
@@ -62,7 +61,6 @@ class SearchActivity : AppCompatActivity() {
         searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(newText: String): Boolean {
-                viewModel.setDataSearch(newText)
                 return true
             }
 

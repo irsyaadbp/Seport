@@ -11,12 +11,11 @@ import com.irsyaad.dicodingsubmission.seport.adapter.ViewPagerAdapter
 import com.irsyaad.dicodingsubmission.seport.model.SportModel
 import com.irsyaad.dicodingsubmission.seport.model.response.ListDetailLeague
 import com.irsyaad.dicodingsubmission.seport.view.main.MainActivity
-import com.irsyaad.dicodingsubmission.seport.viewModel.ListViewModel
 import kotlinx.android.synthetic.main.activity_detail.*
 
 class DetailLeagueActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: ListViewModel
+    private lateinit var viewModel: DetaiLeagueViewModel
     private lateinit var data: SportModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,7 +23,7 @@ class DetailLeagueActivity : AppCompatActivity() {
         setContentView(R.layout.activity_detail)
         data = intent.getParcelableExtra(MainActivity().keyParcelable)!!
 
-        viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(DetaiLeagueViewModel::class.java)
 
         viewModel.getDetailLeague(data.id).observe(this, Observer { result ->
             result?.let { setLayout(it) } ?: run { viewModel.isError.value = true }
@@ -64,7 +63,4 @@ class DetailLeagueActivity : AppCompatActivity() {
         return id.toInt()
     }
 
-    fun getParentActivity(): String {
-        return "DetailLeague"
-    }
 }

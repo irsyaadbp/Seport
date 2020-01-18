@@ -8,7 +8,6 @@ import com.irsyaad.dicodingsubmission.seport.R
 import com.irsyaad.dicodingsubmission.seport.adapter.SportAdapter
 import com.irsyaad.dicodingsubmission.seport.model.SportModel
 import com.irsyaad.dicodingsubmission.seport.view.detail.DetailLeagueActivity
-import com.irsyaad.dicodingsubmission.seport.viewModel.ListViewModel
 import org.jetbrains.anko.*
 
 class MainActivity : AppCompatActivity(), AnkoLogger {
@@ -45,7 +44,7 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
     }
 
     private fun callViewModel() {
-        val viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
+        val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
         viewModel.getListLeague().observe(this, Observer {result ->
             result?.let { sportAdapter.setData(it) } ?: run { viewModel.isError.value = true}

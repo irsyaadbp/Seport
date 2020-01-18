@@ -1,4 +1,4 @@
-package com.irsyaad.dicodingsubmission.seport.model.service
+package com.irsyaad.dicodingsubmission.seport.repository
 
 import androidx.lifecycle.LiveData
 import com.irsyaad.dicodingsubmission.seport.model.FavoriteModel
