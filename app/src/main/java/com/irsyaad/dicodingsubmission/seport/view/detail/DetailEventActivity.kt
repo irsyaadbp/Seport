@@ -15,15 +15,16 @@ import com.irsyaad.dicodingsubmission.seport.R
 import com.irsyaad.dicodingsubmission.seport.adapter.DetailEventAdapter
 import com.irsyaad.dicodingsubmission.seport.model.EventModel
 import com.irsyaad.dicodingsubmission.seport.model.FavoriteModel
-import com.irsyaad.dicodingsubmission.seport.viewModel.ListViewModel
+import com.irsyaad.dicodingsubmission.seport.view.favorite.FavoriteViewModel
 import kotlinx.android.synthetic.main.activity_detail.toolbar
 import kotlinx.android.synthetic.main.activity_detail_event.*
 
 class DetailEventActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: ListViewModel
+    private lateinit var viewModelDetail: DetailEventViewModel
+    private lateinit var favViewModel: FavoriteViewModel
     private lateinit var data: EventModel
-    private lateinit var type: String
+    private var type: String? = null
     private lateinit var detailEventAdapter: DetailEventAdapter
     private var favorite: Boolean = false
 
@@ -37,18 +38,19 @@ class DetailEventActivity : AppCompatActivity() {
         setContentView(R.layout.activity_detail_event)
 
         data = intent.getParcelableExtra(keyDetailEvent)!!
-        type = intent.getStringExtra(keyTypeEvent)!!
+        type = if(intent.getStringExtra(keyTypeEvent) != null) intent.getStringExtra(keyTypeEvent) else null
 
-        viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
+        viewModelDetail = ViewModelProvider(this).get(DetailEventViewModel::class.java)
+        favViewModel = ViewModelProvider(this).get(FavoriteViewModel::class.java)
 
         isLoading()
         setLayout()
 
-        viewModel.getDetailEventLeague(data.id!!.toInt()).observe(this, Observer { result ->
+        viewModelDetail.getDetailEventLeague(data.id!!.toInt()).observe(this, Observer { result ->
             result?.let {
                 detailEventAdapter.setData(it)
-                viewModel.checkFavorite(data.id!!.toInt(), type)
-            } ?: run { viewModel.isError.value = true}
+                type?.let { favViewModel.checkFavorite(data.id!!.toInt(), it) }
+            } ?: run { viewModelDetail.isError.value = true}
         })
 
         setSupportActionBar(toolbar)
@@ -67,28 +69,30 @@ class DetailEventActivity : AppCompatActivity() {
                 true
             }
             R.id.om_favorite -> {
-                viewModel.isFavorite.value = !viewModel.isFavorite.value!!
-                if (viewModel.isFavorite.value!!) {
-                    viewModel.insertFavorite(
-                        FavoriteModel(
-                            data.id!!.toInt(),
-                            data.idHomeTeam!!.toInt(),
-                            data.homeTeam!!,
-                            data.homeTeamScore,
-                            data.idAwayTeam!!.toInt(),
-                            data.awayTeam!!,
-                            data.awayTeamScore,
-                            data.name,
-                            data.date,
-                            data.time,
-                            data.thumbnails,
-                            type
+                favViewModel.isFavorite.value = !favViewModel.isFavorite.value!!
+                type?.let {
+                    if (favViewModel.isFavorite.value!!) {
+                        favViewModel.insertFavorite(
+                            FavoriteModel(
+                                data.id!!.toInt(),
+                                data.idHomeTeam!!.toInt(),
+                                data.homeTeam!!,
+                                data.homeTeamScore,
+                                data.idAwayTeam!!.toInt(),
+                                data.awayTeam!!,
+                                data.awayTeamScore,
+                                data.name,
+                                data.date,
+                                data.time,
+                                data.thumbnails,
+                                it
+                            )
                         )
-                    )
-                    Toast.makeText(this, getString(R.string.favorite), Toast.LENGTH_SHORT).show()
-                } else {
-                    viewModel.deleteFavorite(data.id!!.toInt(), type)
-                    Toast.makeText(this, getString(R.string.remove_favorite), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, getString(R.string.favorite), Toast.LENGTH_SHORT).show()
+                    } else {
+                        favViewModel.deleteFavorite(data.id!!.toInt(), it)
+                        Toast.makeText(this, getString(R.string.remove_favorite), Toast.LENGTH_SHORT).show()
+                    }
                 }
                 true
             }
@@ -98,10 +102,12 @@ class DetailEventActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        this.menu = menu
-        val inflater = menuInflater
-        inflater.inflate(R.menu.favorite_menu, menu)
-        isFavorite()
+        type?.let {
+            this.menu = menu
+            val inflater = menuInflater
+            inflater.inflate(R.menu.favorite_menu, menu)
+            isFavorite()
+        }
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -112,31 +118,31 @@ class DetailEventActivity : AppCompatActivity() {
         tvDetailHomeScore.text = data.homeTeamScore
         tvDetailAwayScore.text = data.awayTeamScore
 
-        viewModel.getHomeTeam(data.idHomeTeam!!.toInt()).observe(this, Observer {result ->
+        viewModelDetail.getHomeTeam(data.idHomeTeam!!.toInt()).observe(this, Observer { result ->
             if(result != null){
                 Glide.with(this)
                     .load(result.strTeamBadge)
                     .centerCrop()
                     .into(ivDetailHomeLogo)
             }else{
-                viewModel.isError.value = true
+                viewModelDetail.isError.value = true
             }
         })
 
-        viewModel.getAwayTeam(data.idAwayTeam!!.toInt()).observe(this, Observer {result ->
+        viewModelDetail.getAwayTeam(data.idAwayTeam!!.toInt()).observe(this, Observer { result ->
             if(result != null){
                 Glide.with(this)
                     .load(result.strTeamBadge)
                     .centerCrop()
                     .into(ivDetailAwayLogo)
             }else{
-                viewModel.isError.value = true
+                viewModelDetail.isError.value = true
             }
         })
     }
 
     private fun isLoading(){
-        viewModel.showLoading.observe(this, Observer {status ->
+        viewModelDetail.showLoading.observe(this, Observer { status ->
             if(status){
                 loading.visibility = View.VISIBLE
                 rvDetailEvent.visibility = View.GONE
@@ -148,7 +154,7 @@ class DetailEventActivity : AppCompatActivity() {
     }
 
     private fun isFavorite(){
-        viewModel.isFavorite.observe(this, Observer {status ->
+        favViewModel.isFavorite.observe(this, Observer {status ->
             favorite = status
             Log.d("status", ""+status)
             when {

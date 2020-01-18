@@ -15,14 +15,14 @@ import com.irsyaad.dicodingsubmission.seport.R
 import com.irsyaad.dicodingsubmission.seport.adapter.EventAdapter
 import com.irsyaad.dicodingsubmission.seport.model.EventModel
 import com.irsyaad.dicodingsubmission.seport.view.detail.DetailEventActivity
-import com.irsyaad.dicodingsubmission.seport.viewModel.ListViewModel
+import com.irsyaad.dicodingsubmission.seport.view.favorite.FavoriteViewModel
 import kotlinx.android.synthetic.main.fragment_past_favorite.*
 
 /**
  * A simple [Fragment] subclass.
  */
 class PastFavoriteFragment : Fragment() {
-    private lateinit var viewModel: ListViewModel
+    private lateinit var viewModel: FavoriteViewModel
     private lateinit var eventAdapter: EventAdapter
 
     override fun onCreateView(
@@ -36,7 +36,7 @@ class PastFavoriteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(FavoriteViewModel::class.java)
 
         viewModel.getPastEventFavorite.observe(viewLifecycleOwner, Observer { result ->
             result?.let {

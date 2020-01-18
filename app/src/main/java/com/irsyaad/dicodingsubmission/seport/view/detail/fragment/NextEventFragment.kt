@@ -13,15 +13,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.irsyaad.dicodingsubmission.seport.R
 import com.irsyaad.dicodingsubmission.seport.adapter.EventAdapter
 import com.irsyaad.dicodingsubmission.seport.view.detail.DetailEventActivity
+import com.irsyaad.dicodingsubmission.seport.view.detail.DetailEventViewModel
 import com.irsyaad.dicodingsubmission.seport.view.detail.DetailLeagueActivity
-import com.irsyaad.dicodingsubmission.seport.viewModel.ListViewModel
 import kotlinx.android.synthetic.main.fragment_next_event.*
 
 /**
  * A simple [Fragment] subclass.
  */
 class NextEventFragment : Fragment() {
-    private lateinit var viewModel: ListViewModel
+    private lateinit var viewModel: DetailEventViewModel
     private lateinit var eventAdapter: EventAdapter
 
     override fun onCreateView(
@@ -39,7 +39,7 @@ class NextEventFragment : Fragment() {
         val activity = activity as DetailLeagueActivity
         val id = activity.getId()
 
-        viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(DetailEventViewModel::class.java)
 
         isLoading()
 

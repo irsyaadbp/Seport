@@ -13,15 +13,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.irsyaad.dicodingsubmission.seport.R
 import com.irsyaad.dicodingsubmission.seport.adapter.EventAdapter
 import com.irsyaad.dicodingsubmission.seport.view.detail.DetailEventActivity
+import com.irsyaad.dicodingsubmission.seport.view.detail.DetailEventViewModel
 import com.irsyaad.dicodingsubmission.seport.view.detail.DetailLeagueActivity
-import com.irsyaad.dicodingsubmission.seport.viewModel.ListViewModel
 import kotlinx.android.synthetic.main.fragment_past_event.*
 
 /**
  * A simple [Fragment] subclass.
  */
 class PastEventFragment : Fragment() {
-    private lateinit var viewModel: ListViewModel
+    private lateinit var viewModelDetail: DetailEventViewModel
     private lateinit var eventAdapter: EventAdapter
 
     override fun onCreateView(
@@ -39,12 +39,12 @@ class PastEventFragment : Fragment() {
         val activity = activity as DetailLeagueActivity
         val id = activity.getId()
 
-        viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
+        viewModelDetail = ViewModelProvider(this).get(DetailEventViewModel::class.java)
 
         isLoading()
 
-        viewModel.getPastEvent(id).observe(viewLifecycleOwner, Observer { result ->
-            result?.let { eventAdapter.setData(it) } ?: run { viewModel.isError.value = true}
+        viewModelDetail.getPastEvent(id).observe(viewLifecycleOwner, Observer { result ->
+            result?.let { eventAdapter.setData(it) } ?: run { viewModelDetail.isError.value = true}
         })
 
         eventAdapter = EventAdapter(context!!){
@@ -61,7 +61,7 @@ class PastEventFragment : Fragment() {
     }
 
     private fun isLoading(){
-        viewModel.showLoading.observe(viewLifecycleOwner, Observer {status ->
+        viewModelDetail.showLoading.observe(viewLifecycleOwner, Observer { status ->
             if(status){
                 loading.visibility = View.VISIBLE
                 rvPastEvent.visibility = View.GONE
