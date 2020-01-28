@@ -20,4 +20,28 @@
     <string name="remove_favorite">Remove from favorite</string>
     <string name="not_found">Not Found</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="index_standing">#</string>
+    <string name="club_name">Club Name</string>
+    <string name="played">P</string>
+    <string name="win">W</string>
+    <string name="lose">L</string>
+    <string name="goal_against">GA</string>
+    <string name="goal_for">GF</string>
+    <string name="goal_difference">GD</string>
+    <string name="total">Total</string>
+    <string name="draw">D</string>
+    <string name="league">League</string>
+    <string name="website">Website</string>
+    <string name="stadium">Stadium</string>
+    <string name="location">Location</string>
+    <string name="description">Description</string>
+    <string name="player_name">Player Name</string>
+    <string name="country">Country</string>
+    <string name="position">Position</string>
+    <string name="match">Match</string>
+    <string name="player">Player</string>
+    <string name="team">Team</string>
+
 </resources>

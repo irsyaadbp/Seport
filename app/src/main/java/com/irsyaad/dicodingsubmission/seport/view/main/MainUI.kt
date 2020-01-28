@@ -10,6 +10,7 @@ import com.irsyaad.dicodingsubmission.seport.R
 import com.irsyaad.dicodingsubmission.seport.adapter.SportAdapter
 import com.irsyaad.dicodingsubmission.seport.view.favorite.FavoriteActivity
 import com.irsyaad.dicodingsubmission.seport.view.search.SearchActivity
+import com.irsyaad.dicodingsubmission.seport.view.search.SearchOptionsActivity
 import jp.wasabeef.recyclerview.animators.SlideInUpAnimator
 import org.jetbrains.anko.*
 import org.jetbrains.anko.recyclerview.v7.recyclerView
@@ -52,7 +53,7 @@ class MainUI(private val sportAdapter: SportAdapter): AnkoComponent<MainActivity
                         setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
 
                         setOnMenuItemClickListener {
-                            startActivity<SearchActivity>()
+                            startActivity<SearchOptionsActivity>()
                             true
                         }
                     }

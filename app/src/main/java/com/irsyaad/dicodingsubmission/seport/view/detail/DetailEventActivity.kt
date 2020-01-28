@@ -47,8 +47,8 @@ class DetailEventActivity : AppCompatActivity() {
         setLayout()
 
         viewModelDetail.getDetailEventLeague(data.id!!.toInt()).observe(this, Observer { result ->
-            result?.let {
-                detailEventAdapter.setData(it)
+            result?.let {resp ->
+                detailEventAdapter.setData(resp)
                 type?.let { favViewModel.checkFavorite(data.id!!.toInt(), it) }
             } ?: run { viewModelDetail.isError.value = true}
         })

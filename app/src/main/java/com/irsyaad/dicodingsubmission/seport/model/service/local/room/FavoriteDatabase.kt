@@ -5,8 +5,9 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.irsyaad.dicodingsubmission.seport.model.FavoriteModel
+import com.irsyaad.dicodingsubmission.seport.model.FavoriteTeamModel
 
-@Database(entities = [FavoriteModel::class], version = 1)
+@Database(entities = [FavoriteModel::class, FavoriteTeamModel::class], version = 2, exportSchema = false)
 abstract class FavoriteDatabase : RoomDatabase() {
     abstract fun favoriteDao() : FavoriteDao
     companion object{
@@ -17,6 +18,7 @@ abstract class FavoriteDatabase : RoomDatabase() {
                 synchronized(FavoriteDatabase::class) {
                     INSTANCE = Room.databaseBuilder(context.applicationContext,
                         FavoriteDatabase::class.java, "favoriteDatabase.db")
+                        .fallbackToDestructiveMigration()
                         .build()
                 }
             }

@@ -6,10 +6,8 @@ import androidx.lifecycle.ViewModel
 import com.irsyaad.dicodingsubmission.seport.model.DetailEventModel
 import com.irsyaad.dicodingsubmission.seport.model.EventModel
 import com.irsyaad.dicodingsubmission.seport.model.response.ListDetailTeam
-import com.irsyaad.dicodingsubmission.seport.repository.DetailEventCallback
-import com.irsyaad.dicodingsubmission.seport.repository.DetailTeamCallback
-import com.irsyaad.dicodingsubmission.seport.repository.EventCallback
-import com.irsyaad.dicodingsubmission.seport.repository.Repository
+import com.irsyaad.dicodingsubmission.seport.model.response.StandingTable
+import com.irsyaad.dicodingsubmission.seport.repository.*
 
 class DetailEventViewModel : ViewModel(){
     private val repository: Repository = Repository()
@@ -140,4 +138,5 @@ class DetailEventViewModel : ViewModel(){
 
         })
     }
+
 }

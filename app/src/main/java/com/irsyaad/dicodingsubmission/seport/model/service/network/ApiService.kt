@@ -19,8 +19,21 @@ interface ApiService {
     fun detailEvent(@Query("id") id: Int): Call<DetailEventLeague>
 
     @GET("searchevents.php")
-    fun searchEvent(@Query("e") text: String): Call<SearchEventLeague>
+    fun searchEvent(@Query("e") e: String): Call<SearchEventLeague>
+
+    @GET("searchteams.php")
+    fun searchTeam(@Query("t") t: String): Call<DetailTeamLeague>
 
     @GET("lookupteam.php")
     fun detailTeam(@Query("id") id: Int): Call<DetailTeamLeague>
+
+    @GET("lookup_all_teams.php")
+    fun allTeamLeague(@Query("id") id: Int): Call<DetailTeamLeague>
+
+    @GET("lookuptable.php")
+    fun getStandingTable(@Query("l") l: Int): Call<StandingsEventResponse>
+
+    @GET("searchplayers.php")
+    fun playerTeam(@Query("t") t: String): Call<PlayerResponse>
+
 }
