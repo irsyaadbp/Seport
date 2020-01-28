@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.irsyaad.dicodingsubmission.seport.model.FavoriteModel
+import com.irsyaad.dicodingsubmission.seport.model.FavoriteTeamModel
 import com.irsyaad.dicodingsubmission.seport.model.service.local.room.FavoriteDatabase
 import com.irsyaad.dicodingsubmission.seport.repository.FavoriteRepository
 import kotlinx.coroutines.launch
@@ -30,5 +31,19 @@ class FavoriteViewModel(application: Application) : AndroidViewModel(application
 
     fun deleteFavorite(id: Int, type: String) = viewModelScope.launch {
         repository.delete(id, type)
+    }
+
+    val getTeamFavorite: LiveData<List<FavoriteTeamModel>> = repository.teamFavorite
+
+    fun checkFavoriteTeam(id:Int) = viewModelScope.launch {
+        isFavorite.value = repository.checkFavoriteTeam(id) > 0
+    }
+
+    fun insertFavoriteTeam(favorite: FavoriteTeamModel) = viewModelScope.launch {
+        repository.insertTeam(favorite)
+    }
+
+    fun deleteFavoriteTeam(id: Int) = viewModelScope.launch {
+        repository.deleteTeam(id)
     }
 }

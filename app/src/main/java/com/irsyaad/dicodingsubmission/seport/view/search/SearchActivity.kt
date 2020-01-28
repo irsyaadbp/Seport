@@ -11,16 +11,23 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.irsyaad.dicodingsubmission.seport.R
+import com.irsyaad.dicodingsubmission.seport.adapter.AllTeamAdapter
 import com.irsyaad.dicodingsubmission.seport.adapter.EventAdapter
 import com.irsyaad.dicodingsubmission.seport.view.detail.DetailEventActivity
+import com.irsyaad.dicodingsubmission.seport.view.detail.DetailTeamActivity
+import com.irsyaad.dicodingsubmission.seport.view.detail.fragment.TeamFragment
 import kotlinx.android.synthetic.main.activity_search.*
 
 class SearchActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: SearchViewModel
-    private lateinit var searchAdapter: EventAdapter
+    private var viewModel: SearchViewModel? = null
+    private var searchAdapter: EventAdapter? = null
+    private var teamAdapter: AllTeamAdapter? = null
+
+    private var search: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,34 +35,82 @@ class SearchActivity : AppCompatActivity() {
 
         setSupportActionBar(toolbar)
 
+        search = intent.getStringExtra(SearchOptionsActivity().keySearch)
+
         search()
         viewModel = ViewModelProvider(this).get(SearchViewModel::class.java)
         isLoading()
-        viewModel.getSearchEvent().observe(this, Observer { result ->
-            result?.let {
-                searchAdapter.setData(result)
-                if(result.isEmpty()) {
-                    Toast.makeText(this, getString(R.string.search_not_found), Toast.LENGTH_SHORT).show()
-                    tvNotFound.visibility = View.VISIBLE
-                    rvSearch.visibility = View.GONE
-                    loading.visibility = View.GONE
+        search?.let {
+            when (it) {
+                "events" -> {
+                    viewModel?.let { vm ->
+                        vm.getSearchEvent().observe(this, Observer { result ->
+                            result?.let {
+                                searchAdapter?.setData(result)
+                                if (result.isEmpty()) {
+                                    Toast.makeText(
+                                        this,
+                                        getString(R.string.search_not_found),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    tvNotFound.visibility = View.VISIBLE
+                                    rvSearch.visibility = View.GONE
+                                    loading.visibility = View.GONE
+                                }
+                            } ?: run { vm.isError.value = true }
+
+                        })
+                    }
+
+                    searchAdapter = EventAdapter(this) { event ->
+                        val intent = Intent(this, DetailEventActivity::class.java)
+                        intent.putExtra(DetailEventActivity().keyDetailEvent, event)
+                        startActivity(intent)
+                    }
+
+                    rvSearch.apply {
+                        layoutManager = LinearLayoutManager(this@SearchActivity)
+                        adapter = searchAdapter
+                    }
                 }
-            } ?: run { viewModel.isError.value = true}
+                else -> {
+                    viewModel?.let { vm ->
+                        vm.getSearchTeam.observe(this, Observer { result ->
+                            result?.let {
+                                teamAdapter?.setData(result)
+                                if (result.isEmpty()) {
+                                    Toast.makeText(
+                                        this,
+                                        getString(R.string.search_not_found),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    tvNotFound.visibility = View.VISIBLE
+                                    rvSearch.visibility = View.GONE
+                                    loading.visibility = View.GONE
+                                }
+                            } ?: run { vm.isError.value = true }
 
-        })
+                        })
+                    }
 
-        searchAdapter = EventAdapter(this){
-            val intent = Intent(this, DetailEventActivity::class.java)
-            intent.putExtra(DetailEventActivity().keyDetailEvent, it)
-            startActivity(intent)
+                    teamAdapter = AllTeamAdapter(this) { team ->
+                        val intent = Intent(this, DetailTeamActivity::class.java)
+                        intent.putExtra(TeamFragment().keyTeam, team.idTeam.toInt())
+                        startActivity(intent)
+                    }
+
+                    rvSearch.apply {
+                        layoutManager = GridLayoutManager(this@SearchActivity, 2)
+                        adapter = teamAdapter
+                    }
+                }
+            }
         }
-        rvSearch.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = searchAdapter
-        }
+
+
     }
 
-    private fun search(){
+    private fun search() {
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         searchView.onActionViewExpanded()
         searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
@@ -65,7 +120,10 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun onQueryTextSubmit(query: String): Boolean {
-                viewModel.setDataSearch(query)
+                search?.let {
+                    if (it == "events") viewModel?.setDataSearch(query)
+                    else viewModel?.setDataSearchTeam(query)
+                }
                 return true
             }
 
@@ -82,13 +140,13 @@ class SearchActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun isLoading(){
-        viewModel.showLoading.observe(this, Observer {status ->
-            if(status){
+    private fun isLoading() {
+        viewModel?.showLoading?.observe(this, Observer { status ->
+            if (status) {
                 loading.visibility = View.VISIBLE
                 rvSearch.visibility = View.GONE
                 tvNotFound.visibility = View.GONE
-            }else{
+            } else {
                 rvSearch.visibility = View.VISIBLE
                 loading.visibility = View.GONE
                 tvNotFound.visibility = View.GONE

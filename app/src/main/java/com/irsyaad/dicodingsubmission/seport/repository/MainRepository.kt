@@ -232,6 +232,80 @@ class Repository {
         })
     }
 
+    fun getTableStandingRepository(id: Int, callback: StandingTableCallback){
+        service.getStandingTable(id).enqueue(object: Callback<StandingsEventResponse>{
+            override fun onFailure(call: Call<StandingsEventResponse>, t: Throwable) {
+                callback.onError()
+            }
+
+            override fun onResponse(
+                call: Call<StandingsEventResponse>,
+                response: Response<StandingsEventResponse>
+            ) {
+                val data = response.body()?.table
+                data.let {
+                    it?.let { result -> callback.onSuccess(result) }
+                } ?: callback.onError()
+            }
+        })
+    }
+
+    fun getAllTeamLeagueRepository(id: Int, callback: AllTeamLeagueCallback){
+        service.allTeamLeague(id).enqueue(object: Callback<DetailTeamLeague>{
+            override fun onFailure(call: Call<DetailTeamLeague>, t: Throwable) {
+                callback.onError()
+            }
+
+            override fun onResponse(
+                call: Call<DetailTeamLeague>,
+                response: Response<DetailTeamLeague>
+            ) {
+                val data = response.body()?.teams
+
+                data.let {
+                    it?.let { result ->
+                        callback.onSucces(result)
+                    }
+                } ?: callback.onError()
+            }
+
+        })
+    }
+
+    fun getAllPlayerRepository(club: String, callback: PlayerCallback){
+        service.playerTeam(club).enqueue(object: Callback<PlayerResponse>{
+            override fun onFailure(call: Call<PlayerResponse>, t: Throwable) {
+                callback.onError()
+            }
+
+            override fun onResponse(
+                call: Call<PlayerResponse>,
+                response: Response<PlayerResponse>
+            ) {
+                val data = response.body()?.player
+                data?.let { callback.onSucces(it) } ?: callback.onError()
+            }
+
+        })
+    }
+
+    fun getSearchTeamRepository(text: String, callback: AllTeamLeagueCallback){
+        service.searchTeam(text).enqueue(object: Callback<DetailTeamLeague> {
+            override fun onFailure(call: Call<DetailTeamLeague>, t: Throwable) {
+                callback.onError()
+            }
+
+            override fun onResponse(
+                call: Call<DetailTeamLeague>,
+                response: Response<DetailTeamLeague>
+            ) {
+                val data = response.body()?.teams
+                data?.let { callback.onSucces(it) } ?: callback.onError()
+            }
+
+        })
+    }
+
 }
 
 interface DetailLeagueCallback {
@@ -244,6 +318,11 @@ interface DetailEventCallback {
     fun onError()
 }
 
+interface AllTeamLeagueCallback {
+    fun onSucces(response: ArrayList<ListDetailTeam>)
+    fun onError()
+}
+
 interface DetailTeamCallback {
     fun onSuccess(response: ListDetailTeam)
     fun onError()
@@ -251,5 +330,15 @@ interface DetailTeamCallback {
 
 interface EventCallback {
     fun onSuccess(response: List<EventModel>)
+    fun onError()
+}
+
+interface StandingTableCallback {
+    fun onSuccess(response: List<StandingTable>)
+    fun onError()
+}
+
+interface PlayerCallback {
+    fun onSucces(response: ArrayList<ListPlayer>)
     fun onError()
 }

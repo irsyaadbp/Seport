@@ -97,8 +97,6 @@ class EventAdapter(private val context: Context, private val listener: (EventMod
 
             })
 
-
-//            container.setOnClickListener { listener(data) }
         }
     }
 }

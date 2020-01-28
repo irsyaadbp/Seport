@@ -1,5 +1,8 @@
 package com.irsyaad.dicodingsubmission.seport.model.response
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
 data class DetailTeamLeague(
     val teams: ArrayList<ListDetailTeam>
 )

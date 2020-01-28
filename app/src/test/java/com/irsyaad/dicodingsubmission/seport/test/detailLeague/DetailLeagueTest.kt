@@ -4,7 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.irsyaad.dicodingsubmission.seport.model.SportModel
 import com.irsyaad.dicodingsubmission.seport.model.service.local.DataSport
 import com.irsyaad.dicodingsubmission.seport.test.utils.getOrAwaitValue
-import com.irsyaad.dicodingsubmission.seport.view.detail.DetaiLeagueViewModel
+import com.irsyaad.dicodingsubmission.seport.view.detail.DetailLeagueViewModel
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
 import org.junit.Before
@@ -12,7 +12,7 @@ import org.junit.Rule
 import org.junit.Test
 
 class DetailLeagueTest {
-    private lateinit var viewModel: DetaiLeagueViewModel
+    private lateinit var viewModel: DetailLeagueViewModel
     private lateinit var expectedData: SportModel
 
     @get:Rule
@@ -22,7 +22,7 @@ class DetailLeagueTest {
     fun setUp(){
         expectedData = DataSport.listDataSport[0]
         viewModel =
-            DetaiLeagueViewModel()
+            DetailLeagueViewModel()
     }
 
     @Test
